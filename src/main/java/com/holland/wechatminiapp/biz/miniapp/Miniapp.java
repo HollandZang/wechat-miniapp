@@ -15,10 +15,10 @@ import javax.validation.constraints.NotNull;
 public class Miniapp {
     @NotNull(message = "appid不能为空")
     @Length(min = 18, max = 18, message = "请输入正确的appid")
-    public String appid;
+    public final String appid;
     @NotNull(groups = Insert.class, message = "secret不能为空")
     @Length(min = 32, max = 32, message = "请输入正确的secret")
-    public String secret;
+    public final String secret;
     @Max(value = 20, message = "长度不能超过20")
-    public String name;
+    public final String name;
 }

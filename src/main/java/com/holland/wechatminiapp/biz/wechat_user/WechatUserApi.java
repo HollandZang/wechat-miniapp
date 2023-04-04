@@ -1,4 +1,4 @@
-package com.holland.wechatminiapp.biz.user;
+package com.holland.wechatminiapp.biz.wechat_user;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
@@ -17,15 +17,15 @@ import javax.validation.constraints.NotBlank;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/user/{appid}")
-public class UserApi {
+@RequestMapping("/wechat/user/{appid}")
+public class WechatUserApi {
 
     @Resource
     private WxMaService wxMaService;
 
     @PostMapping("/login")
     public Res<WxMaJscode2SessionResult> login(
-            @PathVariable String appid,
+            @PathVariable(value = "appid") String ignoredAppid,
             @NotBlank(message = "code不能为空") String code
     ) throws WxErrorException {
         WxMaJscode2SessionResult sessionInfo = wxMaService.getUserService().getSessionInfo(code);

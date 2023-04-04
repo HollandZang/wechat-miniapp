@@ -5,7 +5,6 @@ import com.holland.wechatminiapp.constants.SpringConstants;
 import com.holland.wechatminiapp.kit.MyHttpServletRequestWrapper;
 import com.holland.wechatminiapp.kit.StrKit;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -114,9 +113,7 @@ public class LogFilter extends HttpFilter {
         String params = genParamsStrQuery(req);
         String bodyStr;
         try (ServletInputStream inputStream = req.getInputStream()) {
-            byte[] bytes = new byte[inputStream.available()];
-            IOUtils.read(req.getInputStream(), bytes);
-            bodyStr = new String(bytes, StandardCharsets.UTF_8);
+            bodyStr = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         }
         HttpServletRequestWrapper reqWrapper = new MyHttpServletRequestWrapper(req, bodyStr);
 
@@ -133,6 +130,7 @@ public class LogFilter extends HttpFilter {
         log.info("({}) cost[{}s] status[{}] resp[{}]", uuid, time, resp.getStatus(), StrKit.trunc(content, 256));
     }
 
+    @SuppressWarnings("unused")
     private static String genParamsStrJSON(HttpServletRequest req) {
         Enumeration<String> parameterNames = req.getParameterNames();
         if (!parameterNames.hasMoreElements())

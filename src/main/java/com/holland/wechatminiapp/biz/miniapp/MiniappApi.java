@@ -21,7 +21,7 @@ import static com.holland.wechatminiapp.constants.WechatConstants.WX_MA_KEY_PREF
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/miniapps")
+@RequestMapping("/wechat/miniapps")
 public class MiniappApi {
 
     @Resource
@@ -54,7 +54,7 @@ public class MiniappApi {
             return Res.exists(miniapp.appid);
         }
 
-        miniappMapper.save(miniapp);
+        int row = miniappMapper.save(miniapp);
 
         log.info("{} 加载小程序: {}", request.getAttribute(SpringConstants.KEY_REQ_UID), miniapp);
         WxMaRedisBetterConfigImpl config = new WxMaRedisBetterConfigImpl(redisTemplateWxRedisOps, WX_MA_KEY_PREFIX + miniapp.appid);
@@ -62,12 +62,12 @@ public class MiniappApi {
         config.setSecret(miniapp.secret);
         wxMaService.addConfig(miniapp.appid, config);
 
-        return Res.success("OK");
+        return Res.success(row);
     }
 
     @PutMapping("")
     public Res<?> update(@Validated(Update.class) @RequestBody Miniapp miniapp) {
-        miniappMapper.updateSelective(miniapp);
-        return Res.success("OK");
+        int row = miniappMapper.updateSelective(miniapp);
+        return Res.success(row);
     }
 }

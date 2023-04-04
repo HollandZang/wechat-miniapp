@@ -9,8 +9,14 @@ import me.chanjar.weixin.common.redis.RedisTemplateWxRedisOps;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 import static com.holland.wechatminiapp.constants.WechatConstants.WX_MA_KEY_PREFIX;
 
@@ -22,6 +28,8 @@ public class Beans {
     private StringRedisTemplate stringRedisTemplate;
     @Resource
     private MiniappMapper       miniappMapper;
+    @Resource
+    private DataSource          dataSource;
 
     @Bean
     public RedisTemplateWxRedisOps redisTemplateWxRedisOps() {
@@ -41,6 +49,31 @@ public class Beans {
         });
 
         return client;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .authorizeRequests()
+                .mvcMatchers("/actuator/**").hasRole("ADMIN")
+                .mvcMatchers("/sys/**").hasRole("ADMIN")
+                .anyRequest().permitAll()
+                .and().formLogin()
+                .and().cors()
+                .and().csrf().disable()
+                .build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(8);
+    }
+
+    @Bean
+    public JdbcUserDetailsManager jdbcUserDetailsManager() {
+        JdbcUserDetailsManager manager = new JdbcUserDetailsManager();
+        manager.setDataSource(dataSource);
+        return manager;
     }
 
 }
