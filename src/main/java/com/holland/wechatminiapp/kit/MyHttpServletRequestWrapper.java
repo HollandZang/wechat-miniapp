@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 
 public class MyHttpServletRequestWrapper extends HttpServletRequestWrapper {
-    String               bodyStr;
-    MyServletInputStream inputStream;
+    private final String               bodyStr;
+    public final  MyServletInputStream inputStream;
 
     public MyHttpServletRequestWrapper(HttpServletRequest request, String bodyStr) {
         super(request);
@@ -16,6 +16,7 @@ public class MyHttpServletRequestWrapper extends HttpServletRequestWrapper {
         this.inputStream = new MyServletInputStream(bodyStr);
     }
 
+    @SuppressWarnings("RedundantThrows")
     @Override
     public ServletInputStream getInputStream() throws IOException {
         return inputStream;

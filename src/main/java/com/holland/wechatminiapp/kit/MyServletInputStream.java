@@ -7,12 +7,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class MyServletInputStream extends ServletInputStream {
-    ByteArrayInputStream byteArrayInputStream;
+    public final ByteArrayInputStream byteArrayInputStream;
 
     public MyServletInputStream(String bodyStr) {
         this.byteArrayInputStream = new ByteArrayInputStream(bodyStr.getBytes(StandardCharsets.UTF_8));
     }
 
+    @SuppressWarnings("RedundantThrows")
     @Override
     public int read() throws IOException {
         return byteArrayInputStream.read();
