@@ -55,8 +55,8 @@ public class Beans {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .authorizeRequests()
-                .mvcMatchers("/actuator/**").hasRole("ADMIN")
-                .mvcMatchers("/sys/**").hasRole("ADMIN")
+//                .mvcMatchers("/actuator/**").hasRole("ADMIN")
+//                .mvcMatchers("/sys/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and().formLogin()
                 .and().cors()
